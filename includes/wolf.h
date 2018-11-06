@@ -168,6 +168,8 @@ typedef struct		s_data
 	int				d;
 	int				count;
 	int 			nb_level;
+	int				lvl_height;
+	int				che;
 }					t_data;
 
 SDL_Texture			*load_img(SDL_Renderer *ren, SURF *bmp, char *imag);
@@ -201,5 +203,12 @@ void				start_screen(t_data *data);
 void				apply_surface(int x, int y, SURF *sour, SURF *destination);
 void				game(t_data *data);
 void				fresh(t_data *data);
+void				ray_helper(t_data *data);
+void				first_part_ray(t_data *data);
+void				dda_ray(t_data *data);
+void				second_part_ray(t_data *data);
+void				calculate_drawing(t_data *data);
+void				draw_level(t_data *data);
+void				make_level_floor(t_data *data);
 
 #endif

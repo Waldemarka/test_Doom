@@ -37,6 +37,8 @@ void	init_all(t_data *data)
 	data->key_floor = 1;
 	data->for_exit = 1;
 	data->nb_screen = 0;
+	data->level = 0;
+	data->lvl_height = 0;
 	load_media(data);
 }
 
@@ -51,22 +53,6 @@ void	ft_read(t_data *data)
 	check_str(data, reading);
 	int_malloc(data);
 	make_arr(data, reading);
-/*	int a = -1;
-	int b = 0;
-	int c = 0;
-	while (++a != data->nb_level)
-	{
-		b = -1;
-		while (++b != data->height_arr)
-		{
-			c = -1;
-			while (++c != data->width_arr)
-				printf("%d ", data->array[a][b][c]);
-			printf(" %d \n", a);
-		}
-	}*/
-//	check_rest(data);
-	printf("------\n");
 	while (reading[q])
 	{
 		free(reading[q]);
@@ -92,11 +78,11 @@ void	game(t_data *data)
 					data->buf[i][x] = 0;
 				}
 			}
-			/*if (data->key_floor != 3)
-				skybox(data);*/
 			raycasting(data);
 			door(data);
 			key_event(data);
+			if (data->key_floor != 3)
+				skybox(data);
 		}
 	if (data->for_exit == 1)
 		while (data->for_exit == 1)

@@ -16,7 +16,7 @@ SRC_WOLF = ./files/get_next_line.c ./files/raycast.c\
 		./files/other.c ./files/read.c ./files/main.c\
 		./files/raycast2.c ./files/sdl.c ./files/keys.c\
 		./files/sprite.c ./files/keys2.c ./files/door.c\
-		./files/skybox.c ./files/fresh.c 
+		./files/skybox.c ./files/fresh.c ./files/ray_helper.c
 
 OBJECT_WOLF = $(SRC_WOLF:.c=.o)
 
@@ -48,7 +48,7 @@ all: $(NAME)
 $(NAME) : $(OBJECT_WOLF)
 	make -C ./source/libft
 	@echo "file: */Wolf"
-	@gcc -o $(NAME) $(FLAGS) $(LIBFT) $(INCLUDES_SDL2) $(INCLUDES_SDL2_IMAGE) -rpath @loader_path/source/sdl $(FRAMEWORK_SDL2) $(OBJECT_WOLF) $(INCLUDES_SDL2_TTF) $(INCLUDES_SDL2_MIXER)
+	@gcc -fsanitize=address -o $(NAME) $(FLAGS) $(LIBFT) $(INCLUDES_SDL2) $(INCLUDES_SDL2_IMAGE) -rpath @loader_path/source/sdl $(FRAMEWORK_SDL2) $(OBJECT_WOLF) $(INCLUDES_SDL2_TTF) $(INCLUDES_SDL2_MIXER)
 
 %.o: %.c includes/*.h
 	gcc -g $(FLAGS) -o $@ -c $< $(INCLUDES_WOLF) $(INCLUDES_SDL2) $(INCLUDES_LIBFT) \

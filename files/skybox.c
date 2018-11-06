@@ -32,8 +32,9 @@ void	skybox(t_data *data)
 		start_x++;
 		while (y != HEIGHT)
 		{
-			data->buf[y][x] = get_pixel_int(data->sky[data->nbr_sky],
-				start_x, y);
+			if (data->buf[y][x] == 0)
+				data->buf[y][x] = get_pixel_int(data->sky[data->nbr_sky],
+					start_x, y);
 			y++;
 		}
 		x++;

@@ -12,6 +12,25 @@
 
 #include "wolf.h"
 
+void	calculate_drawing(t_data *data)
+{
+	if (SIDE == 0)
+		PERP_WALL_DIST = (MAP_X - POS_X + (1 - STEP_X)
+			/ 2) / RAY_DIR_X;
+	else
+		PERP_WALL_DIST = (MAP_Y - POS_Y + (1 - STEP_Y)
+			/ 2) / RAY_DIR_Y;
+	LINE_HEIGHT = (int)(HEIGHT / PERP_WALL_DIST);
+	DRAW_START = -LINE_HEIGHT / 2 + HEIGHT / 2;
+	if (DRAW_START < 0)
+		DRAW_START = 0;
+	DRAW_END = LINE_HEIGHT / 2 + HEIGHT / 2;
+	if (DRAW_END >= HEIGHT)
+		DRAW_END = HEIGHT - 1;
+	draw_wall(data);
+	make_level_floor(data);
+}
+
 void	second_part_ray(t_data *data)
 {
 	if (RAY_DIR_X < 0)
@@ -54,8 +73,21 @@ void	dda_ray(t_data *data)
 			SIDE = 1;
 		}
 		if (data->array[data->level][MAP_Y][MAP_X] > 0
-			&& data->array[data->level][MAP_Y][MAP_X] < data->max_box)
+			&& data->lvl_height == data->level)
+		{
 			HIT = 1;
+			calculate_drawing(data);
+		}
+		else if (data->lvl_height >= 0 &&
+			data->array[data->level][MAP_Y][MAP_X] > 0 &&
+			((MAP_Y <= data->height_arr - 1) && (MAP_Y >= 0) &&
+		(MAP_X <= data->width_arr - 1) && (MAP_X >= 0)))
+		{
+			calculate_drawing(data);	
+			if (data->array[data->level][MAP_Y][MAP_X] == 1 )
+				HIT = 1;
+		}
+	
 	}
 }
 
@@ -73,43 +105,22 @@ void	first_part_ray(t_data *data)
 	dda_ray(data);
 }
 
-void	calculate_drawing(t_data *data)
-{
-	if (SIDE == 0)
-		PERP_WALL_DIST = (MAP_X - POS_X + (1 - STEP_X)
-			/ 2) / RAY_DIR_X;
-	else
-		PERP_WALL_DIST = (MAP_Y - POS_Y + (1 - STEP_Y)
-			/ 2) / RAY_DIR_Y;
-	LINE_HEIGHT = (int)(HEIGHT / PERP_WALL_DIST);
-	DRAW_START = -LINE_HEIGHT / 2 + HEIGHT / 2;
-	if (DRAW_START < 0)
-		DRAW_START = 0;
-	DRAW_END = LINE_HEIGHT / 2 + HEIGHT / 2;
-	if (DRAW_END >= HEIGHT)
-		DRAW_END = HEIGHT - 1;
-}
 
 void	raycasting(t_data *data)
 {
 	data->x = -1;
-	
+	static int nit;
+	static int nit1;
 	while (++data->x < WIDTH)
+		draw_level(data);
+	//printf("%f------%f\n", POS_X, POS_Y);
+	data->che = SDL_GetTicks();
+	if (data->che > 1000 * nit1)
 	{
-		
-		while (data->level != data->nb_level)
-		{
-			first_part_ray(data);
-			calculate_drawing(data);
-			draw_wall(data);
-			data->level++;
-		}
-		if (data->level == data->nb_level)
-			data->level = 0;
-		find_floorwall(data);
-		dr_floor(data);
-		if (data->x == WIDTH / 2)
-			chek_door(data);
+		printf("FPS : %d\n", nit);
+		nit = 0;
+		nit1++;
 	}
+	nit++;
 	sprites(data);
 }
